@@ -1,3 +1,10 @@
+databases:
+  - name: bookleaf-db
+    databaseName: bookleaf_db
+    user: bookleaf
+    plan: free
+    region: oregon
+
 services:
   - type: web
     name: bookleaf-portal-backend
@@ -14,7 +21,9 @@ services:
       - key: ENVIRONMENT
         value: production
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: bookleaf-db
+          property: connectionString
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: JWT_ALGORITHM

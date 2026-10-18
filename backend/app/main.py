@@ -24,6 +24,21 @@ async def lifespan(app: FastAPI):
     try:
         Base.metadata.create_all(bind=engine)
         logger.info("Database schema verified.")
+
+        if settings.ENABLE_DEMO_BOOTSTRAP:
+            import os
+            import sys
+            root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+            if root_dir not in sys.path:
+                sys.path.insert(0, root_dir)
+            try:
+                from scripts.seed_database import seed_database
+                from scripts.bootstrap_demo_accounts import bootstrap_demo_accounts
+                seed_database()
+                bootstrap_demo_accounts()
+                logger.info("Database initial dataset and demo accounts verified idempotently.")
+            except Exception as seed_err:
+                logger.warning(f"Seed/bootstrap verification notice: {seed_err}")
     except Exception as e:
         logger.error(f"Database schema initialization notice: {e}")
     yield
