@@ -1,5 +1,7 @@
+import hashlib
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user, get_db
@@ -9,6 +11,7 @@ from app.core.security import (
     decode_token,
     verify_password,
 )
+from app.models.author import Author
 from app.models.session import RefreshToken
 from app.models.user import User
 from app.schemas.auth import LoginRequest, RefreshTokenRequest, TokenResponse, UserOut
@@ -18,7 +21,33 @@ router = APIRouter()
 
 @router.post("/login", response_model=TokenResponse)
 def login(login_data: LoginRequest, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == login_data.email.lower()).first()
+    identifier = login_data.email.strip()
+    identifier_lower = identifier.lower()
+
+    # 1. Match by email (case-insensitive)
+    user = db.query(User).filter(func.lower(User.email) == identifier_lower).first()
+
+    # 2. Match by Author ID (e.g. AUTH001, AUTH002, ..., AUTH010)
+    if not user:
+        author = db.query(Author).filter(func.lower(Author.author_id) == identifier_lower).first()
+        if author and author.user_id:
+            user = db.query(User).filter(User.id == author.user_id).first()
+
+    # 3. Match by admin shortcut ("admin", "operations")
+    if not user and identifier_lower in ("admin", "operations", "admin@bookleaf.com"):
+        user = db.query(User).filter(User.role == "admin").first()
+
+    # 4. Match by author full name (case-insensitive)
+    if not user:
+        author = db.query(Author).filter(func.lower(Author.name) == identifier_lower).first()
+        if author and author.user_id:
+            user = db.query(User).filter(User.id == author.user_id).first()
+
+    # 5. Typo domain recovery (@gmail.com -> @email.com)
+    if not user and identifier_lower.endswith("@gmail.com"):
+        fallback_email = identifier_lower.replace("@gmail.com", "@email.com")
+        user = db.query(User).filter(func.lower(User.email) == fallback_email).first()
+
     if not user or not verify_password(login_data.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -36,9 +65,10 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     refresh_token = create_refresh_token(subject=user.id)
 
     # Persist refresh token session
+    token_hash_str = hashlib.sha256(refresh_token.encode("utf-8")).hexdigest()[:32]
     token_record = RefreshToken(
         user_id=user.id,
-        token_hash=refresh_token[-32:],  # store slice hash
+        token_hash=token_hash_str,
         expires_at=datetime.now(timezone.utc),
     )
     db.add(token_record)

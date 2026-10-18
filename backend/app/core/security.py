@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional, Union
 from jose import jwt, JWTError
@@ -45,6 +46,7 @@ def create_refresh_token(subject: Union[str, Any], expires_delta: Optional[timed
         "sub": str(subject),
         "exp": expire,
         "iat": now,
+        "jti": str(uuid.uuid4()),
         "type": "refresh",
     }
     encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)

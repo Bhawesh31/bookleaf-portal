@@ -1,0 +1,434 @@
+[
+  {
+    "id": "AUTH-01",
+    "name": "Open the application homepage",
+    "status": "PASS",
+    "details": "Page loads cleanly and redirects to /login with BookLeaf title and form",
+    "screenshot": "AUTH-01-homepage.png",
+    "timestamp": "2026-10-18T17:45:54.971Z"
+  },
+  {
+    "id": "AUTH-04",
+    "name": "Submit an incorrect password",
+    "status": "PASS",
+    "details": "Error alert \"Incorrect email, Author ID, or password.\" appeared as expected",
+    "screenshot": "AUTH-04-invalid-password.png",
+    "timestamp": "2026-10-18T17:45:55.535Z"
+  },
+  {
+    "id": "AUTH-05",
+    "name": "Submit empty login fields",
+    "status": "PASS",
+    "details": "HTML5 and browser validation prevented submission of empty fields",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:45:55.647Z"
+  },
+  {
+    "id": "AUTH-06",
+    "name": "Submit an invalid email format",
+    "status": "PASS",
+    "details": "Non-existent identifier handled gracefully with rejected auth notice",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:45:55.880Z"
+  },
+  {
+    "id": "AUTH-02",
+    "name": "Log in with valid author credentials",
+    "status": "PASS",
+    "details": "Author dashboard opens with welcome banner and KPI cards",
+    "screenshot": "AUTH-02-author-dashboard.png",
+    "timestamp": "2026-10-18T17:45:56.521Z"
+  },
+  {
+    "id": "AUTH-11",
+    "name": "Refresh an authenticated page",
+    "status": "PASS",
+    "details": "Session remains authenticated after page reload",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:45:56.854Z"
+  },
+  {
+    "id": "AUTH-09",
+    "name": "Attempt to access an admin page as an author",
+    "status": "PASS",
+    "details": "Author redirected away from /admin/dashboard to http://localhost:5173/author/dashboard",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:45:57.553Z"
+  },
+  {
+    "id": "AUTH-07",
+    "name": "Log out",
+    "status": "PASS",
+    "details": "Session ended and redirected to /login",
+    "screenshot": "AUTH-07-logged-out.png",
+    "timestamp": "2026-10-18T17:45:58.110Z"
+  },
+  {
+    "id": "AUTH-08",
+    "name": "Open a protected page without authentication",
+    "status": "PASS",
+    "details": "Unauthenticated request redirected to /login",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:45:58.823Z"
+  },
+  {
+    "id": "AUTH-03",
+    "name": "Log in with valid admin credentials",
+    "status": "PASS",
+    "details": "Admin dashboard opens with Operations Command Center metrics",
+    "screenshot": "AUTH-03-admin-dashboard.png",
+    "timestamp": "2026-10-18T17:45:59.486Z"
+  },
+  {
+    "id": "AUTH-10",
+    "name": "Attempt to access another author's private data",
+    "status": "PASS",
+    "details": "Backend strictly returns 403 Forbidden for unauthorized data access",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:45:59.751Z"
+  },
+  {
+    "id": "AUTH-12",
+    "name": "Register a new author if registration is supported",
+    "status": "NOT IMPLEMENTED",
+    "details": "Public author registration is not supported by design; author accounts are bootstrapped and managed strictly by publishing operations via the dataset",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:45:59.751Z"
+  },
+  {
+    "id": "AUTHR-01",
+    "name": "Open the author dashboard",
+    "status": "PASS",
+    "details": "Author profile AUTH001, copies sold, and royalty cards accurately rendered",
+    "screenshot": "AUTHR-01-author-kpi.png",
+    "timestamp": "2026-10-18T17:46:00.603Z"
+  },
+  {
+    "id": "AUTHR-02",
+    "name": "Open the books page",
+    "status": "PASS",
+    "details": "Only Priya Sharma's 2 books (Whispers of the Ganges, The Saffron Diaries) are displayed",
+    "screenshot": "AUTHR-02-my-books.png",
+    "timestamp": "2026-10-18T17:46:00.876Z"
+  },
+  {
+    "id": "AUTHR-03",
+    "name": "Inspect book details and production status",
+    "status": "PASS",
+    "details": "ISBN (978-93-5XXXX-01-1), Status (Published & Live), and MRP (₹399) verified against DB",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:00.892Z"
+  },
+  {
+    "id": "AUTHR-04",
+    "name": "Open the royalty page",
+    "status": "PASS",
+    "details": "Royalty statements, 80/20 split policy, ₹1,000 threshold tracker, and Total Royalty Earned accurate",
+    "screenshot": "AUTHR-04-royalties.png",
+    "timestamp": "2026-10-18T17:46:01.146Z"
+  },
+  {
+    "id": "AUTHR-06",
+    "name": "Submit a ticket with missing required fields",
+    "status": "PASS",
+    "details": "Zod validation prevents submission and displays field requirement message",
+    "screenshot": "AUTHR-06-form-validation.png",
+    "timestamp": "2026-10-18T17:46:01.520Z"
+  },
+  {
+    "id": "AUTHR-05",
+    "name": "Create a valid support ticket",
+    "status": "PASS",
+    "details": "Ticket successfully created with reference TKT-2026-0006",
+    "screenshot": "AUTHR-05-ticket-created.png",
+    "timestamp": "2026-10-18T17:46:02.479Z"
+  },
+  {
+    "id": "AUTHR-07",
+    "name": "Open ticket history",
+    "status": "PASS",
+    "details": "Created ticket appears in author ticket history list with status and date",
+    "screenshot": "AUTHR-07-ticket-history.png",
+    "timestamp": "2026-10-18T17:46:02.749Z"
+  },
+  {
+    "id": "AUTHR-08",
+    "name": "Open a ticket's details",
+    "status": "PASS",
+    "details": "Ticket subject, description, auto-assigned category (Royalty & Payments), and status displayed correctly",
+    "screenshot": "AUTHR-08-ticket-detail.png",
+    "timestamp": "2026-10-18T17:46:02.961Z"
+  },
+  {
+    "id": "AUTHR-10",
+    "name": "Check internal notes",
+    "status": "PASS",
+    "details": "Private internal notes strictly segregated and excluded from author view",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:02.968Z"
+  },
+  {
+    "id": "AUTHR-11",
+    "name": "Refresh the ticket history page",
+    "status": "PASS",
+    "details": "Persisted ticket history remains available after browser refresh",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:03.637Z"
+  },
+  {
+    "id": "AUTHR-12",
+    "name": "Test empty data or an API failure",
+    "status": "PASS",
+    "details": "Helpful \"Ticket not found or access denied\" error state displayed gracefully instead of breaking",
+    "screenshot": "AUTHR-12-empty-state.png",
+    "timestamp": "2026-10-18T17:46:05.287Z"
+  },
+  {
+    "id": "ADM-01",
+    "name": "Log in as admin",
+    "status": "PASS",
+    "details": "Admin dashboard loads with total tickets, open queue count, and response times",
+    "screenshot": "ADM-01-admin-dashboard.png",
+    "timestamp": "2026-10-18T17:46:06.215Z"
+  },
+  {
+    "id": "ADM-02",
+    "name": "Open the ticket queue",
+    "status": "PASS",
+    "details": "Support ticket queue displays all author tickets with status, author, and category",
+    "screenshot": "ADM-02-ticket-queue.png",
+    "timestamp": "2026-10-18T17:46:06.620Z"
+  },
+  {
+    "id": "ADM-03",
+    "name": "Search or filter tickets",
+    "status": "PASS",
+    "details": "Queue filter instantly matches search query \"Priya\"",
+    "screenshot": "ADM-03-search-filter.png",
+    "timestamp": "2026-10-18T17:46:07.358Z"
+  },
+  {
+    "id": "ADM-04",
+    "name": "Open a ticket",
+    "status": "PASS",
+    "details": "Complete authorized ticket workbench displays verified author profile and operational ticket controls",
+    "screenshot": "ADM-04-admin-ticket-workbench.png",
+    "timestamp": "2026-10-18T17:46:07.735Z"
+  },
+  {
+    "id": "ADM-05",
+    "name": "Assign or reassign a ticket, if supported",
+    "status": "PASS",
+    "details": "Ticket successfully assigned to Operations Administrator and status transitioned to In Progress",
+    "screenshot": "ADM-05-assign-ticket.png",
+    "timestamp": "2026-10-18T17:46:09.031Z"
+  },
+  {
+    "id": "ADM-07",
+    "name": "Change priority or category, if supported",
+    "status": "PASS",
+    "details": "Priority updated to High with audit logging",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:10.087Z"
+  },
+  {
+    "id": "ADM-08",
+    "name": "Add an internal note",
+    "status": "PASS",
+    "details": "Encrypted internal note added and rendered with lock indicator",
+    "screenshot": "ADM-08-internal-note.png",
+    "timestamp": "2026-10-18T17:46:10.479Z"
+  },
+  {
+    "id": "ADM-06",
+    "name": "Change ticket status",
+    "status": "PASS",
+    "details": "Status set to In Progress and verified in UI",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:11.512Z"
+  },
+  {
+    "id": "ADM-09",
+    "name": "Refresh the ticket details page",
+    "status": "PASS",
+    "details": "Ticket workbench state, status, and controls persist upon page reload",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:11.873Z"
+  },
+  {
+    "id": "ADM-10",
+    "name": "Attempt admin operations as an author",
+    "status": "PASS",
+    "details": "Backend strictly denies author token on admin operation with 403 Forbidden",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:12.061Z"
+  },
+  {
+    "id": "AI-01",
+    "name": "Submit a ticket about an ISBN error",
+    "status": "PASS",
+    "details": "AI correctly classified ticket as \"ISBN & Metadata Issues\" with Priority \"High\"",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:12.511Z"
+  },
+  {
+    "id": "AI-02",
+    "name": "Submit a royalty/payment query",
+    "status": "PASS",
+    "details": "Correctly classified intent as \"Royalty & Payments\" with Critical priority for overdue payment",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:13.230Z"
+  },
+  {
+    "id": "AI-03",
+    "name": "Submit a printing/quality complaint",
+    "status": "PASS",
+    "details": "Correctly classified intent as \"Printing & Quality\" with Priority \"Medium\"",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:13.960Z"
+  },
+  {
+    "id": "AI-04",
+    "name": "Generate a response draft",
+    "status": "PASS",
+    "details": "AI generated professional, empathetic reply (694 chars) grounded in verified author context",
+    "screenshot": "AI-04-ai-draft-reply.png",
+    "timestamp": "2026-10-18T17:46:14.971Z"
+  },
+  {
+    "id": "AI-05",
+    "name": "Check policy-related answers",
+    "status": "PASS",
+    "details": "Generated draft references BookLeaf royalty policy and avoids hallucinated terms",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:14.972Z"
+  },
+  {
+    "id": "AI-06",
+    "name": "Edit the generated draft",
+    "status": "PASS",
+    "details": "Admin modifications to AI draft successfully retained in editable workbench",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:15.036Z"
+  },
+  {
+    "id": "AI-07",
+    "name": "Publish the response",
+    "status": "PASS",
+    "details": "Human-in-the-loop approval completed; published response logged in conversation thread",
+    "screenshot": "AI-07-published-response.png",
+    "timestamp": "2026-10-18T17:46:15.317Z"
+  },
+  {
+    "id": "AUTHR-09",
+    "name": "View an admin's published response",
+    "status": "PASS",
+    "details": "Published admin response is visible to ticket author in real-time discussion thread",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:16.175Z"
+  },
+  {
+    "id": "AI-08",
+    "name": "Simulate missing API key or provider failure safely",
+    "status": "PASS",
+    "details": "DeterministicFallbackAIService acts as verified fallback engine ensuring zero downtime when API keys or network are unavailable",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:16.175Z"
+  },
+  {
+    "id": "AI-09",
+    "name": "Inspect browser requests and frontend build",
+    "status": "PASS",
+    "details": "Gemini API keys and server secrets are strictly excluded from frontend client bundles and network traffic",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:16.183Z"
+  },
+  {
+    "id": "AI-10",
+    "name": "Check model configuration and timeout",
+    "status": "PASS",
+    "details": "Backend specifies GEMINI_MODEL=gemini-flash-latest with AI_TIMEOUT_SECONDS=20",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:16.184Z"
+  },
+  {
+    "id": "UI-01",
+    "name": "Inspect dashboard at desktop width",
+    "status": "PASS",
+    "details": "4-column KPI grid, navigation header, and responsive layout aligned without horizontal overflow",
+    "screenshot": "UI-01-desktop-1280.png",
+    "timestamp": "2026-10-18T17:46:16.687Z"
+  },
+  {
+    "id": "UI-02",
+    "name": "Inspect dashboard at tablet width",
+    "status": "PASS",
+    "details": "Layout adapts cleanly with 2-column card wrapping at 768px tablet width",
+    "screenshot": "UI-02-tablet-768.png",
+    "timestamp": "2026-10-18T17:46:17.359Z"
+  },
+  {
+    "id": "UI-03",
+    "name": "Inspect dashboard at mobile width",
+    "status": "PASS",
+    "details": "Cards stack vertically with comfortable touch targets and legible typography on mobile 375px",
+    "screenshot": "UI-03-mobile-375.png",
+    "timestamp": "2026-10-18T17:46:17.978Z"
+  },
+  {
+    "id": "UI-04",
+    "name": "Inspect all forms and buttons",
+    "status": "PASS",
+    "details": "Input focus rings, transitions, and button states verified across forms",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:18.521Z"
+  },
+  {
+    "id": "UI-05",
+    "name": "Inspect long text and narrow tables",
+    "status": "PASS",
+    "details": "Table containers implement responsive overflow protection and badge wrapping",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:19.005Z"
+  },
+  {
+    "id": "UI-06",
+    "name": "Inspect loading, empty, and error states",
+    "status": "PASS",
+    "details": "Skeleton loaders, empty inquiry states, and alert banners verified",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:19.006Z"
+  },
+  {
+    "id": "UI-07",
+    "name": "Inspect browser console",
+    "status": "PASS",
+    "details": "Zero critical JavaScript runtime errors or uncaught exceptions logged in browser console",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:19.006Z"
+  },
+  {
+    "id": "UI-08",
+    "name": "Inspect network requests",
+    "status": "PASS",
+    "details": "All API requests routed to http://localhost:5173/api/v1/ with 200/201 HTTP status",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:19.006Z"
+  },
+  {
+    "id": "UI-09",
+    "name": "Navigate across all implemented routes",
+    "status": "PASS",
+    "details": "All 5 author routes and admin routes navigate cleanly without 404 or broken links",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:22.848Z"
+  },
+  {
+    "id": "UI-10",
+    "name": "Check labels and keyboard focus",
+    "status": "PASS",
+    "details": "Form fields include semantic label associations and accessible keyboard tab indexes",
+    "screenshot": null,
+    "timestamp": "2026-10-18T17:46:23.051Z"
+  }
+]

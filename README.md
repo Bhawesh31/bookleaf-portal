@@ -50,7 +50,7 @@ The database includes pre-bootstrapped demo accounts for all 10 authors and oper
 | **Author** | `farhan.sheikh@email.com` | `AuthorDemo@2026` | Farhan Sheikh (`AUTH008`) — Single title |
 | **Author** | *(All other authors from dataset)* | `AuthorDemo@2026` | `AUTH004` through `AUTH010` |
 
-*Note: The login page includes 1-click test buttons that automatically populate credentials for quick evaluation.*
+*Note: The login page supports flexible authentication. Users can enter any of the 10 author emails, Author IDs (`AUTH001` through `AUTH010`), full names, or admin credentials directly.*
 
 ---
 
@@ -151,7 +151,13 @@ cd frontend
 npm run build
 ```
 
-### Live End-to-End Integration Verification
+### Automated End-to-End Browser QA Suite (Playwright)
+```powershell
+node scripts/run_browser_qa.cjs
+```
+*Executes 54 automated browser test cases verifying Authentication & Authorization, Author Portal, Admin Operations Workbench, Gemini AI Integration, and Responsive Layouts across desktop, tablet, and mobile viewports. See [docs/BROWSER_QA_REPORT.md](docs/BROWSER_QA_REPORT.md) and screenshot artifacts in `docs/qa_artifacts/screenshots/`.*
+
+### Live End-to-End API Integration Verification
 ```powershell
 .\backend\venv\Scripts\python scripts/verify_live_e2e.py
 ```

@@ -1,9 +1,9 @@
 from typing import Optional
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: str = Field(..., description="Email address, Author ID (e.g. AUTH002), or username")
     password: str
 
 

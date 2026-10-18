@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { BookOpen, KeyRound, Lock, Mail, ShieldAlert, Sparkles, UserCheck } from 'lucide-react';
+import { BookOpen, Lock, Mail, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const Login: React.FC = () => {
@@ -19,7 +19,7 @@ export const Login: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const user = await login({ email, password });
+      const user = await login({ email: email.trim(), password });
       if (user.role === 'admin') {
         navigate('/admin/dashboard');
       } else {
@@ -32,9 +32,25 @@ export const Login: React.FC = () => {
     }
   };
 
-  const fillDemoAccount = (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
+  const [showDirectory, setShowDirectory] = useState(false);
+
+  const demoAccounts = [
+    { id: 'AUTH001', name: 'Priya Sharma', email: 'priya.sharma@email.com', role: 'Author (2 Live Titles)' },
+    { id: 'AUTH002', name: 'Rohit Kapoor', email: 'rohit.kapoor@email.com', role: 'Author (2 Live Titles)' },
+    { id: 'AUTH003', name: 'Ananya Reddy', email: 'ananya.reddy@email.com', role: 'Author (Unpaid Royalties)' },
+    { id: 'AUTH004', name: 'Vikram Joshi', email: 'vikram.joshi@email.com', role: 'Author (2 Live Titles)' },
+    { id: 'AUTH005', name: 'Meera Nair', email: 'meera.nair@email.com', role: 'Author (2 Live Titles)' },
+    { id: 'AUTH006', name: 'Arjun Malhotra', email: 'arjun.malhotra@email.com', role: 'Author (1 Live Title)' },
+    { id: 'AUTH007', name: 'Sneha Kulkarni', email: 'sneha.kulkarni@email.com', role: 'Author (Book in Production)' },
+    { id: 'AUTH008', name: 'Farhan Sheikh', email: 'farhan.sheikh@email.com', role: 'Author (1 Live Title)' },
+    { id: 'AUTH009', name: 'Kavita Deshmukh', email: 'kavita.deshmukh@email.com', role: 'Author (2 Live Titles)' },
+    { id: 'AUTH010', name: 'Diya Chatterjee', email: 'diya.chatterjee@email.com', role: 'Author (2 Live Titles)' },
+    { id: 'admin', name: 'Operations Administrator', email: 'admin@bookleaf.com', role: 'Operations Desk' },
+  ];
+
+  const handleSelectDemo = (identifier: string, isAdm: boolean) => {
+    setEmail(identifier);
+    setPassword(isAdm ? 'AdminSecure@2026' : 'AuthorDemo@2026');
     setError(null);
   };
 
@@ -72,20 +88,24 @@ export const Login: React.FC = () => {
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                Email Address
-              </label>
+              <div className="flex justify-between items-baseline mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                  Email Address or Author ID
+                </label>
+                <span className="text-[11px] text-slate-400">e.g. AUTH002</span>
+              </div>
               <div className="relative rounded-lg shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
-                  type="email"
+                  type="text"
                   required
+                  autoComplete="username"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="author@email.com or admin@bookleaf.com"
-                  className="block w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-slate-900 bg-white"
+                  placeholder="Enter your email address"
+                  className="block w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-slate-900 bg-white placeholder-slate-400"
                 />
               </div>
             </div>
@@ -101,10 +121,11 @@ export const Login: React.FC = () => {
                 <input
                   type="password"
                   required
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="block w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-slate-900 bg-white"
+                  className="block w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-slate-900 bg-white placeholder-slate-400"
                 />
               </div>
             </div>
@@ -122,48 +143,65 @@ export const Login: React.FC = () => {
             </button>
           </form>
 
-          {/* Quick Demo Bootstrap Accounts Bar */}
-          <div className="mt-8 pt-6 border-t border-slate-100">
-            <div className="flex items-center space-x-1.5 text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>1-Click Test Demo Credentials</span>
-            </div>
+          {/* Collapsible Demo Accounts Directory */}
+          <div className="mt-5 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => setShowDirectory(!showDirectory)}
+              className="w-full flex items-center justify-between py-1.5 text-xs font-medium text-slate-600 hover:text-brand-600 transition-colors"
+            >
+              <span>Demo Accounts Directory (All 10 Authors &amp; Admin)</span>
+              <span className="text-[11px] font-semibold text-brand-600">
+                {showDirectory ? '▲ Hide' : '▼ Show'}
+              </span>
+            </button>
 
-            <div className="grid grid-cols-1 gap-2">
-              <button
-                type="button"
-                onClick={() => fillDemoAccount('priya.sharma@email.com', 'AuthorDemo@2026')}
-                className="text-left px-3 py-2 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-xs transition-smooth group"
-              >
-                <div className="font-semibold text-slate-800 group-hover:text-brand-800">
-                  Priya Sharma <span className="text-slate-400 font-normal">(Author AUTH001)</span>
+            {showDirectory && (
+              <div className="mt-3 space-y-1.5 max-h-60 overflow-y-auto pr-1">
+                <div className="p-2 bg-slate-50 rounded-lg text-[11px] text-slate-500 mb-2 border border-slate-200">
+                  Click any account below to autofill credentials (or sign in using their <strong>Author ID</strong> directly):
                 </div>
-                <div className="text-slate-500 text-[11px]">priya.sharma@email.com • 2 Published Books</div>
-              </button>
+                {demoAccounts.map((acc) => {
+                  const isAdm = acc.id === 'admin';
+                  return (
+                    <button
+                      key={acc.id}
+                      type="button"
+                      onClick={() => handleSelectDemo(acc.email, isAdm)}
+                      className={`w-full text-left p-2 rounded-lg border text-xs transition-smooth ${
+                        isAdm
+                          ? 'bg-purple-50/70 border-purple-200 hover:bg-purple-100'
+                          : 'bg-white border-slate-200 hover:border-brand-300 hover:bg-brand-50/50'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-slate-800">
+                          {acc.name}
+                        </span>
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
+                            isAdm
+                              ? 'bg-purple-200 text-purple-800'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          {acc.id}
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-slate-500 mt-0.5 flex justify-between">
+                        <span>{acc.email}</span>
+                        <span className="text-slate-400">{acc.role}</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
-              <button
-                type="button"
-                onClick={() => fillDemoAccount('sneha.kulkarni@email.com', 'AuthorDemo@2026')}
-                className="text-left px-3 py-2 rounded-lg bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-xs transition-smooth group"
-              >
-                <div className="font-semibold text-slate-800 group-hover:text-brand-800">
-                  Sneha Kulkarni <span className="text-slate-400 font-normal">(Author AUTH007)</span>
-                </div>
-                <div className="text-slate-500 text-[11px]">sneha.kulkarni@email.com • Includes Book in Production</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => fillDemoAccount('admin@bookleaf.com', 'AdminSecure@2026')}
-                className="text-left px-3 py-2 rounded-lg bg-purple-50/60 hover:bg-purple-100/70 border border-purple-200 hover:border-purple-300 text-xs transition-smooth group"
-              >
-                <div className="font-semibold text-purple-900 group-hover:text-purple-950 flex items-center justify-between">
-                  <span>Operations Administrator</span>
-                  <span className="text-[10px] bg-purple-200 text-purple-800 px-1.5 py-0.5 rounded">Admin</span>
-                </div>
-                <div className="text-purple-700 text-[11px]">admin@bookleaf.com • Full Support Workbench</div>
-              </button>
-            </div>
+          <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-center space-x-2 text-xs text-slate-500">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>Secure TLS Encrypted Access</span>
           </div>
         </div>
       </div>

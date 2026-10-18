@@ -335,7 +335,7 @@ Respond ONLY with a valid JSON object matching this schema:
 
             response = await asyncio.wait_for(
                 asyncio.to_thread(
-                    self.client.models.generate_content,
+                    client.models.generate_content,
                     model=settings.GEMINI_MODEL,
                     contents=prompt,
                     config=types.GenerateContentConfig(
@@ -435,7 +435,7 @@ Respond with a JSON object:
 
             response = await asyncio.wait_for(
                 asyncio.to_thread(
-                    self.client.models.generate_content,
+                    client.models.generate_content,
                     model=settings.GEMINI_MODEL,
                     contents=prompt,
                     config=types.GenerateContentConfig(

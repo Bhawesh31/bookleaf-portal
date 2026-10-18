@@ -180,6 +180,7 @@ export const SubmitTicket: React.FC = () => {
             </label>
             <input
               type="text"
+              id="subject"
               {...register('subject')}
               placeholder="e.g., Question regarding Q3 royalty payout or ISBN Amazon sync"
               className="block w-full px-3 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 bg-slate-50/50 text-slate-900"
@@ -191,11 +192,12 @@ export const SubmitTicket: React.FC = () => {
 
           {/* Detailed Description */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
+            <label htmlFor="description" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
               Detailed Description *
             </label>
             <textarea
               rows={6}
+              id="description"
               {...register('description')}
               placeholder="Please describe your query with as much detail as possible (e.g., order numbers, copies received, specific platforms, or dates)..."
               className="block w-full px-3 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 bg-slate-50/50 text-slate-900 leading-relaxed"

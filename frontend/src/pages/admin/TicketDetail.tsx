@@ -199,10 +199,11 @@ export const AdminTicketDetail: React.FC = () => {
             </h3>
 
             <div>
-              <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
+              <label htmlFor="update-status" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
                 Change Status
               </label>
               <select
+                id="update-status"
                 value={ticket.status}
                 onChange={(e) => statusMutation.mutate(e.target.value)}
                 disabled={statusMutation.isPending}
@@ -216,10 +217,11 @@ export const AdminTicketDetail: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
+              <label htmlFor="override-priority" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
                 Override Priority
               </label>
               <select
+                id="override-priority"
                 value={ticket.priority}
                 onChange={(e) => priorityMutation.mutate(e.target.value)}
                 disabled={priorityMutation.isPending}
@@ -233,10 +235,11 @@ export const AdminTicketDetail: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
+              <label htmlFor="override-category" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
                 Override Category
               </label>
               <select
+                id="override-category"
                 value={ticket.category}
                 onChange={(e) => categoryMutation.mutate(e.target.value)}
                 disabled={categoryMutation.isPending}
@@ -347,6 +350,7 @@ export const AdminTicketDetail: React.FC = () => {
 
                   <button
                     type="button"
+                    id="generate-ai-draft-btn"
                     onClick={() => aiDraftMutation.mutate()}
                     disabled={aiDraftMutation.isPending}
                     className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-md shadow-brand-500/20 disabled:opacity-50 transition-smooth"
@@ -366,6 +370,7 @@ export const AdminTicketDetail: React.FC = () => {
                 <div>
                   <input
                     type="text"
+                    id="custom-ai-instructions"
                     value={customInstructions}
                     onChange={(e) => setCustomInstructions(e.target.value)}
                     placeholder="Add special instructions for AI (e.g. 'Ask for photographs of binding', 'Confirm ₹3,570 payout date')..."
@@ -401,7 +406,7 @@ export const AdminTicketDetail: React.FC = () => {
                 {/* Response Editor & Human-in-the-Loop Publishing */}
                 <div className="space-y-3 pt-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    <label htmlFor="draft-reply" className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                       Response Editor <span className="text-slate-400 font-normal lowercase">(review & edit before publishing)</span>
                     </label>
                     {draftContent && (
@@ -413,6 +418,7 @@ export const AdminTicketDetail: React.FC = () => {
 
                   <textarea
                     rows={8}
+                    id="draft-reply"
                     value={draftContent}
                     onChange={(e) => setDraftContent(e.target.value)}
                     placeholder="Click 'Generate AI Draft' above or write a manual response directly..."
@@ -430,6 +436,7 @@ export const AdminTicketDetail: React.FC = () => {
 
                     <button
                       type="button"
+                      id="publish-response-btn"
                       onClick={() => publishMutation.mutate(draftContent)}
                       disabled={publishMutation.isPending || !draftContent.trim()}
                       className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-600/20 disabled:opacity-50 transition-smooth"
@@ -506,6 +513,7 @@ export const AdminTicketDetail: React.FC = () => {
                 </label>
                 <textarea
                   rows={3}
+                  id="internal-note-content"
                   value={noteContent}
                   onChange={(e) => setNoteContent(e.target.value)}
                   placeholder="Record internal printer escalations, bank tracking numbers, or team notes..."
@@ -514,6 +522,7 @@ export const AdminTicketDetail: React.FC = () => {
                 <div className="flex justify-end">
                   <button
                     type="button"
+                    id="save-internal-note-btn"
                     onClick={() => noteMutation.mutate(noteContent.trim())}
                     disabled={noteMutation.isPending || !noteContent.trim()}
                     className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs disabled:opacity-50 transition-smooth"

@@ -6,7 +6,7 @@ import { AuthProvider } from '../context/AuthContext';
 import { Login } from '../pages/Login';
 
 describe('Login Component', () => {
-  it('renders login form inputs and title', () => {
+  it('renders login form inputs, title, and secure badge', () => {
     render(
       <AuthProvider>
         <BrowserRouter>
@@ -16,11 +16,13 @@ describe('Login Component', () => {
     );
 
     expect(screen.getByText('BookLeaf Publishing Portal')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('author@email.com or admin@bookleaf.com')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter your email address')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('••••••••••••')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument();
+    expect(screen.getByText(/Secure TLS Encrypted Access/i)).toBeInTheDocument();
   });
 
-  it('autofills Priya Sharma demo account when clicked', () => {
+  it('allows entering email and password manually into form inputs', () => {
     render(
       <AuthProvider>
         <BrowserRouter>
@@ -29,14 +31,17 @@ describe('Login Component', () => {
       </AuthProvider>
     );
 
-    const priyaButton = screen.getByText(/Priya Sharma/i);
-    fireEvent.click(priyaButton);
+    const emailInput = screen.getByPlaceholderText('Enter your email address') as HTMLInputElement;
+    const passwordInput = screen.getByPlaceholderText('••••••••••••') as HTMLInputElement;
 
-    const emailInput = screen.getByPlaceholderText('author@email.com or admin@bookleaf.com') as HTMLInputElement;
-    expect(emailInput.value).toBe('priya.sharma@email.com');
+    fireEvent.change(emailInput, { target: { value: 'user@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'SecretPassword123' } });
+
+    expect(emailInput.value).toBe('user@example.com');
+    expect(passwordInput.value).toBe('SecretPassword123');
   });
 
-  it('autofills Administrator demo account when clicked', () => {
+  it('does not display any auto-login or 1-click credential buttons', () => {
     render(
       <AuthProvider>
         <BrowserRouter>
@@ -45,10 +50,9 @@ describe('Login Component', () => {
       </AuthProvider>
     );
 
-    const adminButton = screen.getByText(/Operations Administrator/i);
-    fireEvent.click(adminButton);
-
-    const emailInput = screen.getByPlaceholderText('author@email.com or admin@bookleaf.com') as HTMLInputElement;
-    expect(emailInput.value).toBe('admin@bookleaf.com');
+    expect(screen.queryByText(/1-Click Test Demo Credentials/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Priya Sharma/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Sneha Kulkarni/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Operations Administrator/i)).not.toBeInTheDocument();
   });
 });

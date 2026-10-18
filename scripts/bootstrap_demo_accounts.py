@@ -21,7 +21,8 @@ def bootstrap_demo_accounts():
     db = SessionLocal()
     try:
         author_password_hash = get_password_hash(settings.DEMO_AUTHOR_PASSWORD)
-        admin_password_hash = get_password_hash(settings.DEMO_ADMIN_PASSWORD)
+        admin_password_hash = get_password_hash(settings.effective_admin_password)
+        admin_email = settings.effective_admin_email
 
         # 1. Bootstrap Author Accounts
         authors = db.query(Author).all()
@@ -31,6 +32,9 @@ def bootstrap_demo_accounts():
 
         authors_linked = 0
         for author in authors:
+            specific_password = settings.get_author_password_for_email(author.email)
+            author_password_hash = get_password_hash(specific_password)
+
             user = db.query(User).filter(User.email == author.email).first()
             if not user:
                 user = User(
@@ -43,13 +47,14 @@ def bootstrap_demo_accounts():
                 db.add(user)
                 db.flush()
                 print(f"Created demo account for author: {author.name} ({author.email})")
+            else:
+                user.password_hash = author_password_hash
 
             # Link author to user
             author.user_id = user.id
             authors_linked += 1
 
         # 2. Bootstrap Admin Account
-        admin_email = "admin@bookleaf.com"
         admin_user = db.query(User).filter(User.email == admin_email).first()
         if not admin_user:
             admin_user = User(
@@ -63,7 +68,8 @@ def bootstrap_demo_accounts():
             db.flush()
             print(f"Created admin account: {admin_email}")
         else:
-            print(f"Admin account already exists: {admin_email}")
+            admin_user.password_hash = admin_password_hash
+            print(f"Admin account updated: {admin_email}")
 
         db.commit()
 
@@ -72,12 +78,11 @@ def bootstrap_demo_accounts():
         total_admins = db.query(User).filter(User.role == "admin").count()
         total_users = db.query(User).count()
 
-        print(f"\nDemo Bootstrap Summary:")
+        print(f"\nAccount Bootstrap Summary:")
         print(f"- Authors with linked accounts: {total_authors}/10")
-        print(f"- Admin accounts: {total_admins}")
+        print(f"- Admin accounts: {total_admins} ({admin_email})")
         print(f"- Total Users: {total_users}")
-        print(f"- Default Author Password: {settings.DEMO_AUTHOR_PASSWORD}")
-        print(f"- Default Admin Password: {settings.DEMO_ADMIN_PASSWORD}")
+        print(f"- Credentials securely loaded from environment (.env)")
 
     except Exception as e:
         db.rollback()
