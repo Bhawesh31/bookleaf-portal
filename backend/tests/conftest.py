@@ -104,6 +104,36 @@ def db_session():
     )
     session.add(admin_user)
 
+    # Seed evaluator demo admin
+    demo_admin = User(
+        email="demo.admin@bookleaf.com",
+        password_hash=get_password_hash("DemoAdmin@2026"),
+        full_name="Demo Operations Administrator",
+        role="admin",
+        is_active=True,
+    )
+    session.add(demo_admin)
+
+    # Seed Priya Sharma for demo evaluation tests
+    priya_user = User(
+        email="priya.sharma@email.com",
+        password_hash=get_password_hash("AuthorDemo@2026"),
+        full_name="Priya Sharma",
+        role="author",
+        is_active=True,
+    )
+    session.add(priya_user)
+    session.flush()
+
+    priya_author = Author(
+        author_id="AUTH001",
+        user_id=priya_user.id,
+        name="Priya Sharma",
+        email="priya.sharma@email.com",
+        city="Varanasi",
+    )
+    session.add(priya_author)
+
     session.commit()
 
     yield session

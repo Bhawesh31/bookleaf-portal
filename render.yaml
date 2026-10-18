@@ -43,6 +43,10 @@ services:
       - key: ADMIN_EMAIL
         value: admin@bookleaf.com
       - key: ADMIN_PASSWORD
-        value: AdminSecure@2026
+        sync: false
+      - key: DEMO_ADMIN_EMAIL
+        value: demo.admin@bookleaf.com
+      - key: DEMO_ADMIN_PASSWORD
+        value: DemoAdmin@2026
       - key: DEMO_AUTHOR_PASSWORD
         value: AuthorDemo@2026

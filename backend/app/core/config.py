@@ -72,14 +72,16 @@ class Settings(BaseSettings):
     GEMINI_MODEL: str = "gemini-flash-latest"
     AI_TIMEOUT_SECONDS: int = 20
 
-    # Secured Admin & Demo Bootstrap Credentials
-    ENABLE_DEMO_BOOTSTRAP: bool = True
+    # Private Production Admin Credentials (Set privately via environment; never hardcoded)
     ADMIN_EMAIL: str = "admin@bookleaf.com"
-    ADMIN_PASSWORD: str = "AdminSecure@2026"
-    DEMO_ADMIN_EMAIL: Optional[str] = None
-    DEMO_ADMIN_PASSWORD: Optional[str] = None
+    ADMIN_PASSWORD: Optional[str] = None
 
-    # Default Author Password fallback
+    # Dedicated Evaluator Demo Accounts (Documented for evaluation access)
+    ENABLE_DEMO_BOOTSTRAP: bool = True
+    DEMO_ADMIN_EMAIL: str = "demo.admin@bookleaf.com"
+    DEMO_ADMIN_PASSWORD: str = "DemoAdmin@2026"
+
+    # Default Author Password fallback for evaluation
     DEMO_AUTHOR_PASSWORD: str = "AuthorDemo@2026"
 
     # All 10 Author Credentials

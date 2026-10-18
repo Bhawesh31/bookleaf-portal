@@ -5,6 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user, get_db
+from app.core.config import settings
 from app.core.security import (
     create_access_token,
     create_refresh_token,
@@ -33,9 +34,14 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
         if author and author.user_id:
             user = db.query(User).filter(User.id == author.user_id).first()
 
-    # 3. Match by admin shortcut ("admin", "operations")
-    if not user and identifier_lower in ("admin", "operations", "admin@bookleaf.com"):
-        user = db.query(User).filter(User.role == "admin").first()
+    # 3. Match by admin shortcut ("admin", "operations", "demo.admin")
+    if not user:
+        if identifier_lower in ("demo", "demo.admin", "demoadmin", "demo@bookleaf.com"):
+            user = db.query(User).filter(func.lower(User.email) == settings.DEMO_ADMIN_EMAIL.lower()).first()
+        elif identifier_lower in ("admin", "operations"):
+            user = db.query(User).filter(func.lower(User.email) == settings.ADMIN_EMAIL.lower()).first()
+            if not user:
+                user = db.query(User).filter(User.role == "admin").first()
 
     # 4. Match by author full name (case-insensitive)
     if not user:

@@ -74,11 +74,17 @@ def run_live_e2e_verification():
     assert ticket["category"] == "Royalty & Payments"
 
     # 6. Admin Login
-    print("\n[Step 6] Admin Login (admin@bookleaf.com)...")
+    print("\n[Step 6] Admin Login (demo.admin@bookleaf.com)...")
     admin_login_res = requests.post(
         f"{BASE_URL}/auth/login",
-        json={"email": "admin@bookleaf.com", "password": "AdminSecure@2026"},
+        json={"email": "demo.admin@bookleaf.com", "password": "DemoAdmin@2026"},
     )
+    if admin_login_res.status_code != 200:
+        # Compatibility fallback for older pre-seeded local instances
+        admin_login_res = requests.post(
+            f"{BASE_URL}/auth/login",
+            json={"email": "admin@bookleaf.com", "password": "AdminSecure@2026"},
+        )
     assert admin_login_res.status_code == 200, f"Admin login failed: {admin_login_res.text}"
     admin_token = admin_login_res.json()["access_token"]
     admin_headers = {"Authorization": f"Bearer {admin_token}"}

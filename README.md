@@ -36,21 +36,28 @@ A full-stack, AI-powered communication and operations platform built for BookLea
 
 ---
 
-## 3. Demo Credentials
+## 3. Evaluator Demo Credentials & Production Security
 
-The database includes pre-bootstrapped demo accounts for all 10 authors and operations administration:
+The portal maintains a strict separation between the **private production administrator** and **dedicated evaluator demo accounts**. The database includes pre-bootstrapped demo accounts for evaluators to test all author and admin functions without exposing or modifying any real production credentials.
 
-| Role | Name / Email | Password | Details |
+### Evaluator Demo Accounts (Testing & Grading)
+
+| Role | Email / Identifier | Password | Permitted Actions & Details |
 | :--- | :--- | :--- | :--- |
-| **Admin** | `admin@bookleaf.com` | `AdminSecure@2026` | Operations Administrator Workbench |
-| **Author** | `priya.sharma@email.com` | `AuthorDemo@2026` | Priya Sharma (`AUTH001`) — 2 Published Titles |
-| **Author** | `sneha.kulkarni@email.com` | `AuthorDemo@2026` | Sneha Kulkarni (`AUTH007`) — Has book in production |
-| **Author** | `rohit.kapoor@email.com` | `AuthorDemo@2026` | Rohit Kapoor (`AUTH002`) — Multi-channel distribution |
-| **Author** | `ananya.reddy@email.com` | `AuthorDemo@2026` | Ananya Reddy (`AUTH003`) — Unpaid pending royalties |
-| **Author** | `farhan.sheikh@email.com` | `AuthorDemo@2026` | Farhan Sheikh (`AUTH008`) — Single title |
-| **Author** | *(All other authors from dataset)* | `AuthorDemo@2026` | `AUTH004` through `AUTH010` |
+| **Demo Admin** | `demo.admin@bookleaf.com` | `DemoAdmin@2026` | **Full Operations Desk**: Queue management, ticket self-assignment, priority/category overrides, confidential internal notes, AI response drafting, publishing public responses, status changes. |
+| **Demo Author** | `priya.sharma@email.com` | `AuthorDemo@2026` | Priya Sharma (`AUTH001`) — 2 Published Titles, ₹19,908 Royalties, ticket thread history. |
+| **Demo Author** | `sneha.kulkarni@email.com` | `AuthorDemo@2026` | Sneha Kulkarni (`AUTH007`) — Book in production (*Whispers of the Heart*), null date/MRP handling. |
+| **Demo Author** | `rohit.kapoor@email.com` | `AuthorDemo@2026` | Rohit Kapoor (`AUTH002`) — Multi-channel distribution (Amazon India & UK). |
+| **Demo Author** | `ananya.reddy@email.com` | `AuthorDemo@2026` | Ananya Reddy (`AUTH003`) — Unpaid pending royalties breakdown. |
+| **Demo Author** | `farhan.sheikh@email.com` | `AuthorDemo@2026` | Farhan Sheikh (`AUTH008`) — Single live title. |
+| **Demo Author** | *(All other 5 authors)* | `AuthorDemo@2026` | `AUTH004` (Vikram), `AUTH005` (Meera), `AUTH006` (Arjun), `AUTH009` (Kavita), `AUTH010` (Diya). |
 
-*Note: The login page supports flexible authentication. Users can enter any of the 10 author emails, Author IDs (`AUTH001` through `AUTH010`), full names, or admin credentials directly.*
+> **Evaluator Quick-Fill**: The web login page features an expandable **"Demo Accounts Directory"** button that autofills evaluator credentials with a single click.
+
+### Private Production Administrator Protection
+- The real production administrator account is configured privately via environment variables (`ADMIN_EMAIL` and `ADMIN_PASSWORD`) or hosting dashboard secrets (`sync: false` in Render Blueprint).
+- Startup seeding and demo bootstrap scripts are strictly idempotent and **never overwrite or reset existing administrator passwords**.
+- Evaluator demo access operates completely independently from the private production administrator account.
 
 ---
 

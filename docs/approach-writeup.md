@@ -24,6 +24,9 @@ When approaching this assignment, I prioritized three core pillars:
 - **Argon2id Password Hashing & JWT Refresh Rotation**:
   Authentication separates user login credentials from author profile records. Refresh tokens are stored in the database with revocation capabilities to prevent token replay attacks.
 
+- **Decoupled Evaluator Demo Access & Production Credential Protection**:
+  Production administrator credentials are managed via environment variables and hosting secret stores (`sync: false` on Render), never checked into Git. Dedicated demo administrator (`demo.admin@bookleaf.com`) and author accounts are seeded idempotently for evaluators, and the bootstrap pipeline strictly prohibits overwriting existing administrator passwords on startup or deployment.
+
 - **Selective Knowledge Base Retrieval vs. Full Prompt Stuffing**:
   Instead of passing the entire Knowledge Base and infinite history on every LLM call, our service extracts only the relevant policy card (Royalty, ISBN, Printing, Distribution, or Production) based on category detection, reducing token overhead to <800 tokens per call.
 

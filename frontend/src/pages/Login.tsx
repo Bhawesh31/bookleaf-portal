@@ -45,12 +45,12 @@ export const Login: React.FC = () => {
     { id: 'AUTH008', name: 'Farhan Sheikh', email: 'farhan.sheikh@email.com', role: 'Author (1 Live Title)' },
     { id: 'AUTH009', name: 'Kavita Deshmukh', email: 'kavita.deshmukh@email.com', role: 'Author (2 Live Titles)' },
     { id: 'AUTH010', name: 'Diya Chatterjee', email: 'diya.chatterjee@email.com', role: 'Author (2 Live Titles)' },
-    { id: 'admin', name: 'Operations Administrator', email: 'admin@bookleaf.com', role: 'Operations Desk' },
+    { id: 'demo-admin', name: 'Demo Administrator (Operations)', email: 'demo.admin@bookleaf.com', role: 'Evaluator Operations Desk' },
   ];
 
   const handleSelectDemo = (identifier: string, isAdm: boolean) => {
     setEmail(identifier);
-    setPassword(isAdm ? 'AdminSecure@2026' : 'AuthorDemo@2026');
+    setPassword(isAdm ? 'DemoAdmin@2026' : 'AuthorDemo@2026');
     setError(null);
   };
 
@@ -162,7 +162,7 @@ export const Login: React.FC = () => {
                   Click any account below to autofill credentials (or sign in using their <strong>Author ID</strong> directly):
                 </div>
                 {demoAccounts.map((acc) => {
-                  const isAdm = acc.id === 'admin';
+                  const isAdm = acc.id.includes('admin');
                   return (
                     <button
                       key={acc.id}

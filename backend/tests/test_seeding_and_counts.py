@@ -39,10 +39,10 @@ def test_verified_dataset_counts():
         linked_authors = [a for a in authors if a.user_id is not None]
         assert len(linked_authors) == 10
 
-        # Verify admin user
-        admin = db.query(User).filter(User.role == "admin").first()
-        assert admin is not None
-        assert admin.email == "admin@bookleaf.com"
+        # Verify admin users (both production admin and evaluator demo admin)
+        admin_emails = [u.email for u in db.query(User).filter(User.role == "admin").all()]
+        assert "admin@bookleaf.com" in admin_emails
+        assert "demo.admin@bookleaf.com" in admin_emails
 
     finally:
         db.close()

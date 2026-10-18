@@ -14,17 +14,17 @@ from app.models.author import Author
 
 
 def bootstrap_demo_accounts():
+    """
+    Safely and idempotently bootstraps evaluator demo accounts while protecting
+    the real production administrator account against accidental password resets.
+    """
     if not settings.ENABLE_DEMO_BOOTSTRAP:
         print("Demo bootstrap is disabled by configuration (ENABLE_DEMO_BOOTSTRAP=False).")
         return
 
     db = SessionLocal()
     try:
-        author_password_hash = get_password_hash(settings.DEMO_AUTHOR_PASSWORD)
-        admin_password_hash = get_password_hash(settings.effective_admin_password)
-        admin_email = settings.effective_admin_email
-
-        # 1. Bootstrap Author Accounts
+        # 1. Bootstrap Demo Author Accounts (10 Authors)
         authors = db.query(Author).all()
         if not authors:
             print("No authors found in the database. Please run seed_database.py first.")
@@ -48,28 +48,61 @@ def bootstrap_demo_accounts():
                 db.flush()
                 print(f"Created demo account for author: {author.name} ({author.email})")
             else:
-                user.password_hash = author_password_hash
+                # Idempotent: Never overwrite author password if already provisioned
+                if not user.is_active:
+                    user.is_active = True
+                if user.role != "author":
+                    user.role = "author"
 
-            # Link author to user
-            author.user_id = user.id
+            # Ensure author profile is linked to user account
+            if author.user_id != user.id:
+                author.user_id = user.id
             authors_linked += 1
 
-        # 2. Bootstrap Admin Account
-        admin_user = db.query(User).filter(User.email == admin_email).first()
-        if not admin_user:
-            admin_user = User(
-                email=admin_email,
-                password_hash=admin_password_hash,
-                full_name="Operations Administrator",
+        # 2. Bootstrap Dedicated Demo Admin Account (For Evaluators)
+        demo_admin_email = (settings.DEMO_ADMIN_EMAIL or "demo.admin@bookleaf.com").strip().lower()
+        demo_admin_user = db.query(User).filter(User.email == demo_admin_email).first()
+        demo_admin_pwd = settings.DEMO_ADMIN_PASSWORD or "DemoAdmin@2026"
+
+        if not demo_admin_user:
+            demo_admin_user = User(
+                email=demo_admin_email,
+                password_hash=get_password_hash(demo_admin_pwd),
+                full_name="Demo Operations Administrator",
                 role="admin",
                 is_active=True,
             )
-            db.add(admin_user)
+            db.add(demo_admin_user)
             db.flush()
-            print(f"Created admin account: {admin_email}")
+            print(f"Created dedicated evaluator demo admin: {demo_admin_email}")
         else:
-            admin_user.password_hash = admin_password_hash
-            print(f"Admin account updated: {admin_email}")
+            demo_admin_user.role = "admin"
+            demo_admin_user.is_active = True
+            # Keep the designated evaluator demo password in sync
+            demo_admin_user.password_hash = get_password_hash(demo_admin_pwd)
+            print(f"Verified dedicated evaluator demo admin: {demo_admin_email}")
+
+        # 3. Bootstrap Private Production Admin Account (Separate & Protected)
+        prod_admin_email = settings.ADMIN_EMAIL.strip().lower()
+        if prod_admin_email and prod_admin_email != demo_admin_email:
+            prod_admin_user = db.query(User).filter(User.email == prod_admin_email).first()
+            if not prod_admin_user:
+                if settings.ADMIN_PASSWORD:
+                    prod_admin_user = User(
+                        email=prod_admin_email,
+                        password_hash=get_password_hash(settings.ADMIN_PASSWORD),
+                        full_name="Operations Administrator",
+                        role="admin",
+                        is_active=True,
+                    )
+                    db.add(prod_admin_user)
+                    db.flush()
+                    print(f"Initialized private production admin account: {prod_admin_email}")
+                else:
+                    print(f"Notice: ADMIN_PASSWORD not set in environment; skipping creation of {prod_admin_email}.")
+            else:
+                # NEVER OVERWRITE production administrator password!
+                print(f"Production administrator account exists ({prod_admin_email}); password strictly preserved.")
 
         db.commit()
 
@@ -80,13 +113,13 @@ def bootstrap_demo_accounts():
 
         print(f"\nAccount Bootstrap Summary:")
         print(f"- Authors with linked accounts: {total_authors}/10")
-        print(f"- Admin accounts: {total_admins} ({admin_email})")
+        print(f"- Admin accounts: {total_admins} (Demo: {demo_admin_email})")
         print(f"- Total Users: {total_users}")
-        print(f"- Credentials securely loaded from environment (.env)")
+        print(f"- Evaluator demo access secured; production admin password protected against resets.")
 
     except Exception as e:
         db.rollback()
-        print(f"Error bootstrapping demo accounts: {e}")
+        print(f"Error bootstrapping accounts: {e}")
         raise e
     finally:
         db.close()

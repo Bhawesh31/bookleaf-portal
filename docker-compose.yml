@@ -35,7 +35,9 @@ services:
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: gemini-flash-latest
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@bookleaf.com}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-AdminSecure@2026}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      DEMO_ADMIN_EMAIL: ${DEMO_ADMIN_EMAIL:-demo.admin@bookleaf.com}
+      DEMO_ADMIN_PASSWORD: ${DEMO_ADMIN_PASSWORD:-DemoAdmin@2026}
       DEMO_AUTHOR_EMAIL: ${DEMO_AUTHOR_EMAIL:-priya.sharma@email.com}
       DEMO_AUTHOR_PASSWORD: ${DEMO_AUTHOR_PASSWORD:-AuthorDemo@2026}
     ports:
