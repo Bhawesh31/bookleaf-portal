@@ -279,13 +279,15 @@ class GeminiAIService(AIServiceInterface):
 
     def __init__(self):
         self.fallback_service = DeterministicFallbackAIService()
-        self.client = None
+
+    def get_client(self):
         if settings.GEMINI_API_KEY:
             try:
                 from google import genai
-                self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
+                return genai.Client(api_key=settings.GEMINI_API_KEY)
             except Exception as e:
                 logger.warning(f"Failed to initialize Google Gen AI client: {e}. Will use fallback.")
+        return None
 
     async def classify_and_prioritize(
         self,
@@ -293,7 +295,8 @@ class GeminiAIService(AIServiceInterface):
         description: str,
         book_info: Optional[Dict[str, Any]] = None,
     ) -> ClassificationResult:
-        if not self.client or not settings.GEMINI_API_KEY:
+        client = self.get_client()
+        if not client or not settings.GEMINI_API_KEY:
             logger.info("No Gemini API key configured. Executing deterministic fallback classifier.")
             return await self.fallback_service.classify_and_prioritize(subject, description, book_info)
 
@@ -383,7 +386,8 @@ Respond ONLY with a valid JSON object matching this schema:
         book_info: Optional[Dict[str, Any]] = None,
         custom_instructions: Optional[str] = None,
     ) -> DraftResponseResult:
-        if not self.client or not settings.GEMINI_API_KEY:
+        client = self.get_client()
+        if not client or not settings.GEMINI_API_KEY:
             logger.info("No Gemini API key configured. Generating fallback draft response.")
             return await self.fallback_service.generate_draft_response(
                 author_name, ticket_subject, ticket_description, category, priority, book_info, custom_instructions
