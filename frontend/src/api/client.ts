@@ -1,4 +1,11 @@
-const BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+const rawApiUrl = import.meta.env.VITE_API_URL;
+const BASE_URL = rawApiUrl ? rawApiUrl.replace(/\/+$/, '') : '/api/v1';
+
+if (import.meta.env.PROD && !rawApiUrl) {
+  console.warn(
+    '[BookLeaf Support Portal] VITE_API_URL is not set in production. Using relative path "/api/v1". Ensure reverse proxy or Vercel rewrite is active.'
+  );
+}
 
 export class ApiError extends Error {
   status: number;

@@ -1,11 +1,14 @@
-import requests
+import os
 import sys
+import requests
 
 # Configure UTF-8 for console output on Windows
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
-BASE_URL = "http://127.0.0.1:8001/api/v1"
+raw_base = os.environ.get("API_URL") or (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:8000/api/v1")
+raw_base = raw_base.rstrip("/")
+BASE_URL = raw_base if raw_base.endswith("/api/v1") else f"{raw_base}/api/v1"
 
 def run_live_e2e_verification():
     print("==================================================")
