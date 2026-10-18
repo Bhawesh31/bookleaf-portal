@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     # CORS
-    BACKEND_CORS_ORIGINS: List[str] = [
+    BACKEND_CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
@@ -36,13 +36,36 @@ class Settings(BaseSettings):
             if v_clean.startswith("[") and v_clean.endswith("]"):
                 import json
                 try:
-                    return json.loads(v_clean)
+                    parsed = json.loads(v_clean)
+                    if isinstance(parsed, list):
+                        return [str(item).strip().rstrip("/") for item in parsed if str(item).strip()]
                 except Exception:
                     pass
-            return [i.strip() for i in v_clean.split(",") if i.strip()]
+            return [i.strip().rstrip("/") for i in v_clean.split(",") if i.strip()]
         elif isinstance(v, (list, tuple)):
-            return list(v)
+            return [str(i).strip().rstrip("/") for i in v if str(i).strip()]
         return []
+
+    @property
+    def cors_origins(self) -> List[str]:
+        origins: List[str] = []
+        raw = self.BACKEND_CORS_ORIGINS
+        if isinstance(raw, list):
+            origins = [o for o in raw if o and o != "*"]
+        elif isinstance(raw, str) and raw.strip() and raw.strip() != "*":
+            origins = [i.strip().rstrip("/") for i in raw.split(",") if i.strip() and i.strip() != "*"]
+
+        # Ensure local development hosts are present
+        dev_origins = [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+        ]
+        for dev_url in dev_origins:
+            if dev_url not in origins:
+                origins.append(dev_url)
+        return origins
 
     # AI Configuration
     GEMINI_API_KEY: Optional[str] = None

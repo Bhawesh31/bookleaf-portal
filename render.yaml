@@ -31,7 +31,7 @@ services:
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: "720"
       - key: BACKEND_CORS_ORIGINS
-        value: "*"
+        value: "https://bookleaf-portal.vercel.app,http://localhost:5173"
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL
